@@ -269,15 +269,7 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 	@Override
 	public Map<String, Set<String>> getCountriesCodeMap() {
 		try {
-			List<Country> countries = countryRepository.findAll();
-			if (CollectionUtils.isEmpty(countries)) {
-				// call countries services
-				countries = getCountries(false);
-				if (CollectionUtils.isEmpty(countries)) {
-					return Collections.emptyMap();
-				}
-				countryRepository.saveAll(countries);
-			}
+			List<Country> countries = getCountries(true);
 
 			Map<String, Set<String>> countriesCodeMap = new HashMap<>();
 			for (Country country : countries) {
