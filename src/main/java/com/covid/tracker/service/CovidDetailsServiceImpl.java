@@ -1,14 +1,6 @@
 package com.covid.tracker.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -62,22 +54,24 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 		List<Country> countries = new ArrayList<>();
 		List<Country> countriesInDB = new ArrayList<>();
 		try {
+			Sort sortByFavouriteAndName = Sort.by(Sort.Order.desc("favourite"), Sort.Order.asc("name"));
 			if(fetchDb) {
-				return countryRepository.findAll();
+				return countryRepository.findAll(sortByFavouriteAndName);
 			}
 			if (isOutdated) {
 				countries = covidRestRepository.getListOfCountries();
-				countriesInDB = countryRepository.findAll();
+				countriesInDB = countryRepository.findAll(sortByFavouriteAndName);
 				List<String> countriesName = countriesInDB.stream().map(Country::getName).collect(Collectors.toList());
 
 				countriesInDB.addAll(countries.stream().filter(o -> !countriesName.contains(o.getName()))
 						.collect(Collectors.toList()));
 				updateHistory("countries");
 				countryRepository.saveAll(countriesInDB);
+				countriesInDB.sort(Comparator.comparing(Country::isFavourite).reversed().thenComparing(Country::getName));
 				isOutdated = false;
 
 			} else {
-				countriesInDB = countryRepository.findAll();
+				countriesInDB = countryRepository.findAll(sortByFavouriteAndName);
 			}
 
 		} catch (CovidRapidAPIException e) {
@@ -257,12 +251,12 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 
 	private boolean checkOutDated(String apiName) {
 		List<ApiHistory> result = apiHistoryRepository.findAllByApiName(apiName, Sort.Direction.DESC);
-		return CollectionUtils.isEmpty(result) ? true : getDiff(result.get(0).getDate()) > 7 ? true : false;
+		return CollectionUtils.isEmpty(result) || getDiff(result.get(0).getDate()) > 7;
 	}
 
 	private boolean checkOutDated(String apiName, String type) {
 		List<ApiHistory> result = apiHistoryRepository.findAllByApiNameAndType(apiName, type, Sort.Direction.DESC);
-		return CollectionUtils.isEmpty(result) ? true : getDiff(result.get(0).getDate()) > 7 ? true : false;
+		return CollectionUtils.isEmpty(result) || getDiff(result.get(0).getDate()) > 7;
 	}
 
 	private long getDiff(Date date) {
