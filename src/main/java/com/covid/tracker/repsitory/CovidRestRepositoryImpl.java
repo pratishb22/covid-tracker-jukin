@@ -63,13 +63,13 @@ public class CovidRestRepositoryImpl implements CovidRestRepository {
 					});
 			List<Country> resp = response.getBody();
 			if (CollectionUtils.isEmpty(resp)) {
-				LOGGER.info("Empty RESPONSE Received from API", resp);
+				LOGGER.info("Empty RESPONSE Received from API {}", resp);
 				return resp;
 			}
-			LOGGER.info("End of Rest Template Exhange and response received {}  with size ==> ", resp, resp.size());
+			LOGGER.info("End of Rest Template Exhange and response received {}  with size {} ==> ", resp, resp.size());
 			return response.getBody();
 		} catch (Exception e) {
-			LOGGER.error("Exception occurred {}", e);
+			LOGGER.error("Exception occurred", e);
 			throw new CovidRapidAPIException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),
 					"Exception Occurred While Getting Data from Service");
 		}
@@ -102,12 +102,12 @@ public class CovidRestRepositoryImpl implements CovidRestRepository {
 		}
 		List<CovidTotal> resp = response.getBody();
 		if (CollectionUtils.isEmpty(resp)) {
-			LOGGER.info("Empty RESPONSE Received from API", resp);
+			LOGGER.info("Empty RESPONSE Received from API {}", resp);
 			return Collections.emptyList();
 		}
-		LOGGER.info("End of Rest Template Exhange and response received {}  with size ==> ", resp, resp.size());
+		LOGGER.info("End of Rest Template Exhange and response received {}  with size {} ==> ", resp, resp.size());
 
-		LOGGER.info("End of getListOfCountries method ==> ");
+		LOGGER.info("End of getTotal method ==> ");
 		return resp;
 	}
 
@@ -126,13 +126,13 @@ public class CovidRestRepositoryImpl implements CovidRestRepository {
 					}, queryMap);
 			List<CovidData> resp = response.getBody();
 			if (CollectionUtils.isEmpty(resp)) {
-				LOGGER.info("Empty RESPONSE Received from API", resp);
+				LOGGER.info("Empty RESPONSE Received from API {}", resp);
 				return Collections.emptyList();
 			}
-			LOGGER.info("End of Rest Template Exhange and response received {}  with size ==> ", resp, resp.size());
+			LOGGER.info("End of Rest Template Exhange and response received {}  with size {} ==> ", resp, resp.size());
 			return resp;
 		} catch (Exception e) {
-			LOGGER.error("Exception occurred{}", e);
+			LOGGER.error("Exception occurred", e);
 			throw new CovidRapidAPIException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),
 					"Exception Occurred While Getting Data from Service");
 		}
@@ -153,13 +153,13 @@ public class CovidRestRepositoryImpl implements CovidRestRepository {
 					}, queryMap);
 			List<CovidData> resp = response.getBody();
 			if (CollectionUtils.isEmpty(resp)) {
-				LOGGER.info("Empty RESPONSE Received from API", resp);
+				LOGGER.info("Empty RESPONSE Received from API {}", resp);
 				return Collections.emptyList();
 			}
-			LOGGER.info("End of Rest Template Exhange and response received {}  with size ==> ", resp, resp.size());
+			LOGGER.info("End of Rest Template Exhange and response received {}  with size {} ==> ", resp, resp.size());
 			return resp;
 		} catch (Exception e) {
-			LOGGER.error("Exception occurred{}", e);
+			LOGGER.error("Exception occurred", e);
 			throw new CovidRapidAPIException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),
 					"Exception Occurred While Getting Data from Service");
 		}

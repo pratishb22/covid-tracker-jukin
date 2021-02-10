@@ -171,10 +171,10 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 		List<CovidData> covidData = null;
 		try {
 			if(fetchDb) {
-				return Arrays.asList(covidDataRepository.findByCountry(name));
+				return Arrays.asList(covidDataRepository.findFirstByCountry(name));
 			}
 			if (isOutdated) {
-				covidDataInDB = covidDataRepository.findByCountry(name);
+				covidDataInDB = covidDataRepository.findFirstByCountry(name);
 				covidData = covidRestRepository.getCovidDataByName(name);
 				if (!CollectionUtils.isEmpty(covidData)) {
 					covidDataInDB = CovidData.copy(covidData.get(0), covidDataInDB);
@@ -184,7 +184,7 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 				covidDataRepository.save(covidDataInDB);
 				isOutdated = false;
 			} else {
-				covidDataInDB = covidDataRepository.findByCountry(name);
+				covidDataInDB = covidDataRepository.findFirstByCountry(name);
 
 			}
 		} catch (CovidRapidAPIException e) {
@@ -204,10 +204,10 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 		CovidData covidData = null;
 		try {
 			if(fetchDb) {
-				return Arrays.asList(covidDataRepository.findByCode(code));
+				return Arrays.asList(covidDataRepository.findFirstByCode(code));
 			}
 			if (isOutdated) {
-				covidDataInDB = covidDataRepository.findByCode(code);
+				covidDataInDB = covidDataRepository.findFirstByCode(code);
 				List<CovidData> covidDataFromService = covidRestRepository.getCovidDataByCode(code);
 				// covidDataInDB = CovidData.copy(covidData, covidDataInDB);
 				if (CollectionUtils.isEmpty(covidDataFromService)) {
@@ -220,7 +220,7 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 				covidDataRepository.save(covidDataInDB);
 				isOutdated = false;
 			} else {
-				covidDataInDB = covidDataRepository.findByCode(code);
+				covidDataInDB = covidDataRepository.findFirstByCode(code);
 
 			}
 
@@ -310,7 +310,7 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 	@Override
 	public void addCommentByName(Map<String, String> body) {
 		try {
-			CovidData result = covidDataRepository.findByCountry(body.get("name"));
+			CovidData result = covidDataRepository.findFirstByCountry(body.get("name"));
 			if (null == result) {
 				throw new CovidException(
 						String.format("Comment with specified country name %s does not exist", body.get("name")),
@@ -329,7 +329,7 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 	@Override
 	public void addCommentByCode(Map<String, String> body) {
 		try {
-			CovidData result = covidDataRepository.findByCode(body.get("code"));
+			CovidData result = covidDataRepository.findFirstByCode(body.get("code"));
 			if (null == result) {
 				throw new CovidException(
 						String.format("Comment with specified country code %s does not exist", body.get("code")),
@@ -348,7 +348,7 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 	@Override
 	public List<String> getCommentByName(String name) {
 		try {
-			CovidData result = covidDataRepository.findByCountry(name);
+			CovidData result = covidDataRepository.findFirstByCountry(name);
 			if (null == result) {
 				throw new CovidException(String.format("Comment with specified country code %s does not exist", name),
 						new Exception());
@@ -363,7 +363,7 @@ public class CovidDetailsServiceImpl implements CovidDetailsService {
 	@Override
 	public List<String> getCommentByCode(String code) {
 		try {
-			CovidData result = covidDataRepository.findByCode(code);
+			CovidData result = covidDataRepository.findFirstByCode(code);
 			if (null == result) {
 				throw new CovidException(String.format("Comment with specified country code %s does not exist", code),
 						new Exception());

@@ -11,11 +11,12 @@ import com.covid.tracker.model.CovidTotal;
 @Repository
 public interface CovidRestRepository {
 
-	List<Country> getListOfCountries();
+    List<Country> getListOfCountries();
 
-	List<CovidTotal> getTotal();
+    List<CovidTotal> getTotal();
 
-	List<CovidData> getCovidDataByCode(String code);
-	List<CovidData> getCovidDataByName(String name);
+    List<CovidData> getCovidDataByCode(String code);
+
+    List<CovidData> getCovidDataByName(String name);
 
 }
